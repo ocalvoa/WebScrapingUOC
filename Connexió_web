@@ -1,0 +1,66 @@
+# Creació de classes
+class eleccions:
+    # Inicialitzador de la classe
+    def __init__(self, ano):
+        self.ano = ano
+        self.municipis = []
+
+class municipi:
+    # Inicialitzador de la classe
+    def __init__(self, nom, url):
+        self.__nom = nom
+        self.__url = url
+        self.partits = []
+    # Getters de cadascun dels atributs
+    def getNom(self):
+        return self.__nom
+    def getUrl(self):
+        return self.__url
+    def getPartit(self,index):
+        return self.partits[index]
+    def getLengthPartits(self):
+        return len(self.partits)
+    def setPartit(self,partit):
+        self.partits.append(partit)  
+
+class partit:
+    # Inicialitzador de la classe
+    def __init__(self,nom,vots,percent,regidors):
+        self.__nom = nom
+        self.__vots = vots
+        self.__percent = percent
+        self.__regidors = regidors
+    # Getters de cadascun dels atributs
+    def getNom(self):
+        return self.__nom
+    def getVots(self):
+        return self.__vots
+    def getPercent(self):
+        return self.__percent
+    def getRegidors(self):
+        return self.__regidors
+  import requests
+
+# Es defineix la web de recerca
+web = "https://www.naciodigital.cat/municipals2019"
+# S'obté la web
+page = requests.get(web)
+from bs4 import BeautifulSoup
+soup = BeautifulSoup(page.content,"html.parser")
+
+llista_municipis = []
+counter = 1 #variable contador que indica a quina linia es treballa
+for one_a_tag in soup.find_all('li', class_ = 'list-group-item'):
+    # Els municipis comencen al 47 i acaben al 993
+    if counter >= 47 and counter <= 993: 
+        # S'obté el nom de cada municipi i la seva URL
+        nom = one_a_tag.a.string # S'accedeix al nom
+        url =one_a_tag.a['href'] # S'accedeix a la url
+        # Es crida la classe municipi
+        mun = municipi(nom,url)
+        llista_municipis.append(mun)
+    #S'incrementa en 1
+    counter +=1
+
+print(llista_municipis[0].getNom())
+print(llista_municipis[0].getUrl())
